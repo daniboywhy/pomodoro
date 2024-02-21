@@ -4,8 +4,11 @@ const addTaskBt = document.querySelector(".app__button--add-task");
 const addTaskForm = document.querySelector(".app__form-add-task");
 const textArea = document.querySelector('.app__form-textarea');
 const ulTasks = document.querySelector('.app__section-task-list');
-
 const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+function updateTasks () {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
 
 function addElementTask(task) {
     const li = document.createElement('li');
@@ -23,6 +26,17 @@ function addElementTask(task) {
 
     const button = document.createElement('button');
     button.classList.add('app_button-edit');
+    
+    button.onclick = () => {
+        const newDesc = prompt("Rename: ");
+        console.log("task's new description: ", newDesc);
+        if (!newDesc || newDesc == '') {
+            return;
+        }
+        paragraph.textContent = newDesc;
+        task.description = newDesc;
+        updateTasks();
+        }
 
     const buttonImg = document.createElement('img');
     buttonImg.setAttribute('src', '/imagens/edit.png');
@@ -35,11 +49,17 @@ function addElementTask(task) {
     return li;
 }
 
+
 addTaskBt.addEventListener('click', () => {
     addTaskForm.classList.toggle('hidden');
+
 })
 
 addTaskForm.addEventListener('submit', (event) => {
+    if (textArea.value == '') {
+
+    }
+
     event.preventDefault();
     const task = {
         description: textArea.value
@@ -47,7 +67,7 @@ addTaskForm.addEventListener('submit', (event) => {
     tasks.push(task);
     const elementTask = addElementTask(task);
     ulTasks.append(elementTask);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    updateTasks();
     textArea.value = '';
     addTaskForm.classList.add('hidden');
 })
