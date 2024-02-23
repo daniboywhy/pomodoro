@@ -79,6 +79,11 @@ const contagemRegressiva = () => {
         musicAlert.loop = true; // Permitindo repetição contínua do áudio
         musicAlert.play();
         alert('time finalizado!');
+        const onFocus = html.getAttribute('data-contexto') == 'foco';
+        if (onFocus) {
+            const event = new CustomEvent('focusEnd');
+            document.dispatchEvent(event);
+        }
         musicAlert.pause();
         PausePlayIcon.setAttribute('src', `./imagens/play_arrow.png`);
         reset();

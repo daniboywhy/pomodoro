@@ -5,10 +5,23 @@ const addTaskForm = document.querySelector(".app__form-add-task");
 const textArea = document.querySelector('.app__form-textarea');
 const ulTasks = document.querySelector('.app__section-task-list');
 const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+const cancelBt = document.querySelector('.app__form-footer__button--cancel');
+const taskDescriptionParagraph = document.querySelector('.app__section-active-task-description');
+let selectedTask = null;
+let liSelectedTask = null;
+
 
 function updateTasks () {
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
+
+function cancelAddTask () {
+    textArea.value = '';
+    addTaskForm.classList.add('hidden');
+}
+
+cancelBt.onclick = cancelAddTask;
+
 
 function addElementTask(task) {
     const li = document.createElement('li');
@@ -46,6 +59,23 @@ function addElementTask(task) {
     li.append(paragraph);
     li.append(button);
 
+    li.onclick = () => {
+        document.querySelectorAll('.app__section-task-list-item-active')
+        .forEach(element => {
+            element.classList.remove('app__section-task-list-item-active');
+        })
+        if (selectedTask == task) {
+            taskDescriptionParagraph.textContent = '';
+            selectedTask = null;
+            liSelectedTask = null;
+            return;
+        }
+            selectedTask = task;
+            liSelectedTask = li;
+        taskDescriptionParagraph.textContent = task.description;
+        li.classList.add('app__section-task-list-item-active');
+    }
+
     return li;
 }
 
@@ -76,3 +106,12 @@ tasks.forEach(task => {
     const elementTask = addElementTask(task);
     ulTasks.append(elementTask);
 });
+
+document.addEventListener('focusEnd', () => {
+    if (selectedTask && liSelectedTask) {
+        liSelectedTask.classList.remove('app__section-task-list-item-active');
+        liSelectedTask.classList.add('app__section-task-list-item-complete');
+        liSelectedTask.querySelector('button').setAttribute('disabled', 'true');
+        taskDescriptionParagraph.textContent = '';
+    }
+})
