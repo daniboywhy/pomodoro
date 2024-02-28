@@ -4,9 +4,13 @@ const addTaskBt = document.querySelector(".app__button--add-task");
 const addTaskForm = document.querySelector(".app__form-add-task");
 const textArea = document.querySelector('.app__form-textarea');
 const ulTasks = document.querySelector('.app__section-task-list');
-const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 const cancelBt = document.querySelector('.app__form-footer__button--cancel');
 const taskDescriptionParagraph = document.querySelector('.app__section-active-task-description');
+
+const removeFinishedBt = document.querySelector('#btn-remover-concluidas');
+const removeAllbt = document.querySelector('#btn-remover-todas');
+
 let selectedTask = null;
 let liSelectedTask = null;
 
@@ -123,3 +127,15 @@ document.addEventListener('focusEnd', () => {
         updateTasks();
     }
 })
+
+const removeFinished = (onlyFinished) => {
+    const selector = onlyFinished ? ".app__section-task-list-item-complete" : '.app__section-task-list-item';
+    document.querySelectorAll(selector).forEach(element => {
+        element.remove()
+    })
+    tasks = onlyFinished ? tasks.filter(task => !task.complete) : [];
+    updateTasks();
+}
+
+removeFinishedBt.onclick = () => removeFinished(true);
+removeAllbt.onclick = () => removeFinished(false);

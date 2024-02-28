@@ -16,7 +16,7 @@ const musicPause = new Audio('./sons/pause.mp3');
 const musicAlert = new Audio('./sons/beep.mp3');
 
 
-let timePassadoSegs = 2
+let timePassadoSegs = 25 * 60;
 let intervaloId = null;
 
 musicFocus.loop = true;
