@@ -59,22 +59,28 @@ function addElementTask(task) {
     li.append(paragraph);
     li.append(button);
 
-    li.onclick = () => {
-        document.querySelectorAll('.app__section-task-list-item-active')
-        .forEach(element => {
-            element.classList.remove('app__section-task-list-item-active');
-        })
-        if (selectedTask == task) {
-            taskDescriptionParagraph.textContent = '';
-            selectedTask = null;
-            liSelectedTask = null;
-            return;
+    if (task.complete) {
+        li.classList.add('app__section-task-list-item-complete');
+        button.setAttribute('disabled', 'true');
+    } else {
+        li.onclick = () => {
+            document.querySelectorAll('.app__section-task-list-item-active')
+            .forEach(element => {
+                element.classList.remove('app__section-task-list-item-active');
+            })
+            if (selectedTask == task) {
+                taskDescriptionParagraph.textContent = '';
+                selectedTask = null;
+                liSelectedTask = null;
+                return;
+            }
+                selectedTask = task;
+                liSelectedTask = li;
+            taskDescriptionParagraph.textContent = task.description;
+            li.classList.add('app__section-task-list-item-active');
         }
-            selectedTask = task;
-            liSelectedTask = li;
-        taskDescriptionParagraph.textContent = task.description;
-        li.classList.add('app__section-task-list-item-active');
     }
+
 
     return li;
 }
@@ -113,5 +119,7 @@ document.addEventListener('focusEnd', () => {
         liSelectedTask.classList.add('app__section-task-list-item-complete');
         liSelectedTask.querySelector('button').setAttribute('disabled', 'true');
         taskDescriptionParagraph.textContent = '';
+        selectedTask.complete = true;
+        updateTasks();
     }
 })
